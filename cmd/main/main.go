@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/loiclaborderie/go-gin-template/routes"
+	"github.com/loiclaborderie/bahasa-project/routes"
 )
 
 func main() {

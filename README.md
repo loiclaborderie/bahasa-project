@@ -53,7 +53,7 @@ A clean, structured template for building web applications with Go and the Gin f
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/loiclaborderie/go-gin-template.git
+   git clone https://github.com/loiclaborderie/bahasa-project.git
    cd go-gin-template
    ```
 

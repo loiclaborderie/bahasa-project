@@ -1,4 +1,4 @@
-module github.com/loiclaborderie/go-gin-template
+module github.com/loiclaborderie/bahasa-project
 
 go 1.24.0
 

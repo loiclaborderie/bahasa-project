@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/loiclaborderie/go-gin-template/handlers"
+	"github.com/loiclaborderie/bahasa-project/handlers"
 )
 
 // SetupRouter configures the Gin router with all application routes
@@ -21,7 +21,7 @@ func SetupRouter() *gin.Engine {
 	{
 		// Hello world example
 		v1.GET("/hello", handlers.HelloHandler)
-		
+
 		// User routes
 		users := v1.Group("/users")
 		{
