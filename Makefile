@@ -57,3 +57,8 @@ docker:
 	@echo "Building Docker image..."
 	docker build -t $(APP_NAME) .
 	@echo "Docker build complete"
+
+seed:
+	@echo "Seeding database... "
+	go run ./cmd/seed/main.go
+	@echo "Seeding complete"
