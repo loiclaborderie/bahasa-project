@@ -1,6 +1,8 @@
-package models
+package dialogue
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 // Dialogue represents a conversation used for language learning
 type Dialogue struct {
@@ -9,8 +11,7 @@ type Dialogue struct {
 	Title       string `json:"title" gorm:"not null"`
 	Description string `json:"description"`
 	// Relations
-	Module Module         `json:"-" gorm:"foreignKey:ModuleID"`
-	Lines  []DialogueLine `json:"lines,omitempty" gorm:"foreignKey:DialogueID"`
+	Lines []DialogueLine `json:"lines,omitempty" gorm:"foreignKey:DialogueID"`
 }
 
 // DialogueLine represents a single line in a dialogue

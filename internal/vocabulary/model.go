@@ -1,6 +1,9 @@
-package models
+package vocabulary
 
-import "gorm.io/gorm"
+import (
+	"github.com/loiclaborderie/bahasa-project/internal/user"
+	"gorm.io/gorm"
+)
 
 type VocabularyItem struct {
 	gorm.Model
@@ -19,6 +22,6 @@ type VocabularyList struct {
 	Description string `json:"description"`
 	CreatedBy   uint   `json:"created_by" gorm:"not null"`
 	// Relations
-	Creator User             `json:"-" gorm:"foreignKey:CreatedBy"`
+	Creator user.User        `json:"-" gorm:"foreignKey:CreatedBy"`
 	Items   []VocabularyItem `json:"items,omitempty" gorm:"many2many:list_vocabulary;"`
 }
