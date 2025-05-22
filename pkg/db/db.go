@@ -5,8 +5,10 @@ import (
 	"log"
 
 	"github.com/loiclaborderie/bahasa-project/config"
+	"github.com/loiclaborderie/bahasa-project/internal/dialogue"
+	"github.com/loiclaborderie/bahasa-project/internal/module"
 	"github.com/loiclaborderie/bahasa-project/internal/user"
-	"github.com/loiclaborderie/bahasa-project/models"
+	"github.com/loiclaborderie/bahasa-project/internal/vocabulary"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,7 +35,7 @@ func Init() *gorm.DB {
 		log.Println("Warning: .env file not found, using environment variables")
 	}
 
-	db.AutoMigrate(&user.User{}, &models.Module{}, &models.Dialogue{}, &models.DialogueLine{}, &models.VocabularyItem{}, &models.VocabularyList{})
+	db.AutoMigrate(&user.User{}, &module.Module{}, &dialogue.Dialogue{}, &dialogue.DialogueLine{}, &vocabulary.VocabularyItem{}, &vocabulary.VocabularyList{})
 
 	migrateModels(db)
 
@@ -46,11 +48,11 @@ func migrateModels(db *gorm.DB) {
 
 	err := db.AutoMigrate(
 		&user.User{},
-		&models.Module{},
-		&models.Dialogue{},
-		&models.DialogueLine{},
-		&models.VocabularyItem{},
-		&models.VocabularyList{},
+		&module.Module{},
+		&dialogue.Dialogue{},
+		&dialogue.DialogueLine{},
+		&vocabulary.VocabularyItem{},
+		&vocabulary.VocabularyList{},
 	)
 
 	if err != nil {
