@@ -24,5 +24,6 @@ type DialogueLine struct {
 	AudioURL    string `json:"audio_url"`
 	OrderIndex  int    `json:"order_index" gorm:"not null"`
 	// Relations
-	Dialogue Dialogue `json:"-" gorm:"foreignKey:DialogueID"`
+	Dialogue   Dialogue `json:"-" gorm:"foreignKey:DialogueID"`
+	IsUserTurn *bool    `json:"is_user_turn,omitempty" gorm:"-"`
 }
