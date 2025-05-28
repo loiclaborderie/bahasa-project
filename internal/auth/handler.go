@@ -3,12 +3,12 @@ package auth
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/loiclaborderie/bahasa-project/internal/user"
 	"github.com/loiclaborderie/bahasa-project/pkg/helper"
-	"github.com/loiclaborderie/bahasa-project/request"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +22,7 @@ func NewAuthHandlerImpl(Db *gorm.DB, validate *validator.Validate) *AuthHandler 
 }
 
 func (c AuthHandler) Register(ctx *gin.Context) {
-	var reqBody request.RegisterRequest
+	var reqBody RegisterRequest
 
 	if err := ctx.BindJSON(&reqBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -62,11 +62,16 @@ func (c AuthHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})
+	if err := setLoginCookie(ctx, newUser.Email); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "JWT Error"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"user": existingUser.ToUserResponse(), "message": "User registered and logged in successfully"})
 }
 
 func (c AuthHandler) Login(ctx *gin.Context) {
-	var reqBody request.LoginRequest
+	var reqBody LoginRequest
 
 	if err := ctx.BindJSON(&reqBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -94,12 +99,53 @@ func (c AuthHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := helper.CreateToken(existingUser.Email)
+	err := setLoginCookie(ctx, existingUser.Email)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "JWT Error"})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"access_token": token})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Logged in successfully", "user": existingUser.ToUserResponse()})
+}
+
+func (c AuthHandler) Logout(ctx *gin.Context) {
+	_, err := ctx.Cookie("token")
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "You are not logged in yet"})
+		return
+	}
+
+	ctx.SetCookie(
+		"token", // name
+		"",      // empty value
+		-1,      // maxAge (negative to expire immediately)
+		"/",     // path
+		"",      // domain
+		false,   // secure
+		true,    // httpOnly
+	)
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
+}
+
+func (c AuthHandler) Me(ctx *gin.Context) {
+	user, err := helper.ValidateTokenAndGetUser(ctx)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"user": user.ToUserResponse()})
+}
+
+func setLoginCookie(ctx *gin.Context, email string) error {
+	token, err := helper.CreateToken(email)
+	if err != nil {
+		return err
+	}
+	ctx.SetCookie("token", token, int(24*time.Hour), "/", "", false, true)
+	return nil
 }
