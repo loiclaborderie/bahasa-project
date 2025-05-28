@@ -22,12 +22,12 @@ func GetDatabaseConfig() (DbConfig, error) {
 		return DbConfig{}, errors.New("we could not load any env file")
 	}
 
-	host := getEnv("DB_HOST", "localhost")
-	port := getEnv("DB_PORT", "5432")
-	user := getEnv("DB_USER", "postgres")
-	password := getEnv("DB_PASSWORD", "")
-	dbname := getEnv("DB_NAME", "bahasa_project")
-	sslmode := getEnv("DB_SSLMODE", "disable")
+	host := GetEnv("DB_HOST", "localhost")
+	port := GetEnv("DB_PORT", "5432")
+	user := GetEnv("DB_USER", "postgres")
+	password := GetEnv("DB_PASSWORD", "")
+	dbname := GetEnv("DB_NAME", "bahasa_project")
+	sslmode := GetEnv("DB_SSLMODE", "disable")
 
 	return DbConfig{
 		Host:     host,
@@ -39,7 +39,7 @@ func GetDatabaseConfig() (DbConfig, error) {
 	}, nil
 }
 
-func getEnv(key, defaultValue string) string {
+func GetEnv(key, defaultValue string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		return defaultValue
