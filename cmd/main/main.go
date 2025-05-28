@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gin-contrib/cors"
@@ -29,11 +28,8 @@ func main() {
 	dialogueHandler := dialogue.NewHandler(dialogueService)
 
 	router := gin.Default()
-	// corsConfig.AllowOrigins = []string{config.GetEnv("ALLOW_ORIGIN", "")}
-	fmt.Println("config :", config.GetEnv("ALLOW_ORIGIN", ""))
-
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{config.GetEnv("ALLOW_ORIGIN", "")}, // or set to your dev frontend
+		AllowOrigins:     []string{config.GetEnv("ALLOW_ORIGIN", "")},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
